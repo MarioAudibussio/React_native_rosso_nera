@@ -36,10 +36,6 @@ export default function TabNavigator() {
                   return 'home';
                 case Screen.Favorites:
                   return 'heart';
-                case Screen.Settings:
-                  return 'settings';
-                case Screen.Analytics:
-                  return 'stats-chart';
               }
             };
 
@@ -54,9 +50,7 @@ export default function TabNavigator() {
         };
       }}>
       <Tab.Screen name={Screen.Home} component={HomeScreen}initialParams={{ hasFavoritesUpdated: false }}/>
-      <Tab.Screen name={Screen.Analytics} component={AnalyticsScreen}/>
       <Tab.Screen name={Screen.Favorites} component={FavoritesScreen}initialParams={{ hasFavoritesUpdated: false }}/>
-      <Tab.Screen name={Screen.Settings} component={SettingsScreen}/>
     </Tab.Navigator>
   );
 }

@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
-import { styles } from './home.styles';
-import Card from '../../atoms/cart/cart.atom';
+import { styles } from './home.styles'; // Assicura che lo stile esista
+import ProductCard from '../../atoms/product/product.atom'; // Adatta il componente Card per prodotti
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { MainParamList, Screen } from '../../navigation/types';
-import { useCarts } from '../hook/useCarts.facade';
+import { MainParamList, Screen } from '../../navigation/types'; // Mantieni la tua navigazione
 import { Ionicons } from '@expo/vector-icons';
 import Button from '../../atoms/button/button.atom';
 
@@ -18,29 +17,57 @@ enum FilterType {
   descendent = 'descendent',
 }
 
+// Tipo per i prodotti
+interface Product {
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
+  rating: {
+    rate: number;
+    count: number;
+  };
+}
+
 const HomeScreen = ({ navigation }: Props) => {
-  const { carts, setCarts, initialCarts, favoriteIds, refreshCarts, loadFavorites, addFavorite } =
-    useCarts();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [filterType, setFilterType] = useState<FilterType>(FilterType.initial);
+
+  // ** FETCH PRODUCTS ** //
+  useEffect(() => {
+    fetch('https://fakestoreapi.com/products')
+      .then((res) => res.json())
+      .then((json) => {
+        setProducts(json);
+        setFilteredProducts(json); // Imposta i prodotti iniziali
+      })
+      .catch((error) => console.error('Errore durante il fetch dei prodotti:', error));
+  }, []);
 
   // ** USE CALLBACK ** //
   const onFilterApply = useCallback(
     (type: FilterType) => {
       setFilterType(type);
+
       if (type === FilterType.initial) {
-        // set initial carts
-        setCarts(initialCarts);
+        // Resetta ai prodotti originali
+        setFilteredProducts(products);
         return;
       }
-      const sortedCarts = carts.sort((a, b) => {
+
+      const sortedProducts = [...filteredProducts].sort((a, b) => {
         if (type === FilterType.ascendent) {
-          return a.totalQuantity - b.totalQuantity;
+          return a.price - b.price; // Ordina per prezzo crescente
         }
-        return b.totalQuantity - a.totalQuantity;
+        return b.price - a.price; // Ordina per prezzo decrescente
       });
-      setCarts(sortedCarts);
+
+      setFilteredProducts(sortedProducts);
     },
-    [carts, initialCarts, setCarts]
+    [filteredProducts, products]
   );
 
   const renderFilterButtons = useCallback(() => {
@@ -74,37 +101,18 @@ const HomeScreen = ({ navigation }: Props) => {
   }, [filterType, onFilterApply]);
 
   const renderItem = useCallback(
-    ({ item }) => (
-      <Card
-        cart={item}
-        onAddFavorite={() => addFavorite(item)}
-        selected={favoriteIds.includes(item.id)}
+    ({ item }: { item: Product }) => (
+      <ProductCard
+        product={item}
         onPress={() => {
-          if (!item.id) {
-            return;
-          }
-          navigation.navigate(Screen.Detail, {
-            id: item.id,
-            idsArray: carts.map((el) => el.id),
-          });
+          navigation.navigate(Screen.Detail, { product: item }); 
         }}
       />
     ),
-    [addFavorite, carts, favoriteIds, navigation]
+    [navigation]
   );
 
   const ItemSeparatorComponent = useCallback(() => <View style={styles.itemSeparator}></View>, []);
-
-  // ** USE EFFECT ** //
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      console.log('Favorites screen focused');
-      refreshCarts();
-      loadFavorites();
-    });
-
-    return unsubscribe;
-  }, [loadFavorites, navigation, refreshCarts]);
 
   return (
     <View style={styles.container}>
@@ -112,7 +120,7 @@ const HomeScreen = ({ navigation }: Props) => {
 
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={carts}
+        data={filteredProducts}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         ItemSeparatorComponent={ItemSeparatorComponent}

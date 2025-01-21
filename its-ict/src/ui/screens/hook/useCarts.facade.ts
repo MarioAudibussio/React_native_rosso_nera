@@ -2,15 +2,17 @@ import { useState, useCallback } from 'react';
 import { PREFERRED_CARTS } from '../../../core/storage/types';
 import { storage } from '../../../core/storage/storage';
 
-interface Product {
+export interface Product {
   id: number;
   title: string;
   price: number;
-  quantity: number;
-  total: number;
-  discountPercentage: number;
-  discountedTotal: number;
-  thumbnail: string;
+  description: string;
+  category: string;
+  image: string;
+  rating: {
+    rate: number;
+    count: number;
+  };
 }
 
 export interface Cart {
@@ -24,8 +26,8 @@ export interface Cart {
 }
 
 export const useCarts = () => {
-  const [carts, setCarts] = useState<Cart[]>([]);
-  const [initialCarts, setInitialCarts] = useState<Cart[]>([]);
+  const [carts, setCarts] = useState<Product[]>([]);
+  const [initialCarts, setInitialCarts] = useState<Product[]>([]);
   const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
 
   const refreshCarts = useCallback(async () => {

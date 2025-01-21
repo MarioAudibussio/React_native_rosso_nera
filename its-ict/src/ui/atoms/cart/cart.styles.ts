@@ -58,6 +58,33 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
+  productContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  productImage: {
+    width: 50,
+    height: 50,
+    marginRight: 10,
+    borderRadius: 4,
+  },
+  productDetails: {
+    flex: 1,
+  },
+  productTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ffffff', // Testo bianco per contrasto
+  },
+  productPrice: {
+    fontSize: 14,
+    color: '#c0c0c0', // Grigio chiaro per il prezzo
+  },
+  productRating: {
+    fontSize: 12,
+    color: '#a9a9a9', // Grigio ancora più chiaro per il rating
+  },
 });
 
 export default styles;

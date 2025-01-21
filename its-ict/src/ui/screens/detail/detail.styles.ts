@@ -3,30 +3,40 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
-    backgroundColor: '#121212',
+    backgroundColor: '#f5f5f5',
+    padding: 10,
   },
-  itemSeparator: {
-    height: 20,
+  image: {
+    width: '100%',
+    height: 300,
+    resizeMode: 'contain',
+    marginBottom: 20,
   },
-  detailItem: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.35,
-    shadowRadius: 3.84,
-    elevation: 5,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
   },
-  backButton: {
-    width: 24,
-    height: 24,
-    tintColor: '#ffffff',
+  price: {
+    fontSize: 18,
+    color: '#888',
+    marginBottom: 10,
   },
-  navigatorContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 14,
+  category: {
+    fontSize: 16,
+    fontStyle: 'italic',
+    color: '#666',
+    marginBottom: 10,
+  },
+  rating: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 20,
+  },
+  description: {
+    fontSize: 16,
+    lineHeight: 22,
+    color: '#444',
   },
 });
