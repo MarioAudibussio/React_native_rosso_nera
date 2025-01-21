@@ -1,64 +1,46 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { FlatList, View, Text } from 'react-native';
-import { styles } from './favorites.styles';
-import Card from '../../atoms/cart/cart.atom';
-import { useCarts } from '../hook/useCarts.facade';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { MainParamList, Screen } from '../../navigation/types';
+import React, { useState } from 'react';
+import { View, StyleSheet, FlatList } from 'react-native';
+import ProductCard from '../../atoms/product/product.atom'; // Importa la card
+import { Product } from '../../screens/hook/useCarts.facade';
 
-interface Props {
-  navigation: NativeStackNavigationProp<MainParamList, Screen.Favorites>;
-}
+const Favorite: React.FC = () => {
+  const [favorites, setFavorites] = useState<Product[]>([]);
 
-const FavoritesScreen = ({ navigation }: Props) => {
-  const { carts, favoriteIds, refreshCarts, loadFavorites, addFavorite } = useCarts();
+  const handleLike = (product: Product) => {
+    const isAlreadyLiked = favorites.some(fav => fav.id === product.id);
+    if (isAlreadyLiked) {
+      setFavorites(favorites.filter(fav => fav.id !== product.id));
+    } else {
+      setFavorites([...favorites, product]);
+    }
+  };
 
-  // **DATA ** //
-  const favorites = useMemo(
-    () => carts.filter((cart) => favoriteIds.includes(cart.id)),
-    [carts, favoriteIds]
+  const renderItem = ({ item }: { item: Product }) => (
+    <ProductCard
+      product={item}
+      onPress={() => console.log('Navigate to details')}
+      onLike={() => handleLike(item)}
+      isLiked={favorites.some(fav => fav.id === item.id)}
+    />
   );
-
-  // ** CALLBACKS ** //
-  const renderItem = useCallback(
-    ({ item }) => (
-      <Card
-        cart={item}
-        onAddFavorite={() => addFavorite(item)}
-        selected={favoriteIds.includes(item.id)}
-      />
-    ),
-    [addFavorite, favoriteIds]
-  );
-
-  const ItemSeparatorComponent = useCallback(() => <View style={styles.itemSeparator}></View>, []);
-
-  // ** USE EFFECT ** //
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      console.log('Favorites screen focused');
-      refreshCarts();
-      loadFavorites();
-    });
-
-    return unsubscribe;
-  }, [loadFavorites, navigation, refreshCarts]);
 
   return (
     <View style={styles.container}>
-      {favorites.length > 0 ? (
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={favorites}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id.toString()}
-          ItemSeparatorComponent={ItemSeparatorComponent}
-        />
-      ) : (
-        <Text>No favorites yet</Text>
-      )}
+      <FlatList
+        data={favorites}
+        keyExtractor={item => item.id.toString()}
+        renderItem={renderItem}
+      />
     </View>
   );
 };
 
-export default FavoritesScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f9f9f9',
+    padding: 10,
+  },
+});
+
+export default Favorite;
