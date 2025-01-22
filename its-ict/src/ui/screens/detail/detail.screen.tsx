@@ -15,9 +15,13 @@ const ProductDetails = ({ route, navigation }: Props) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Image source={{ uri: product.image }} style={styles.image} />
-      <Text style={styles.title}>{product.title}</Text>
-      <Text style={styles.price}>${product.price.toFixed(2)}</Text>
-      <Text style={styles.category}>Category: {product.category}</Text>
+      <View style={styles.container}>
+  <View style={styles.row}>
+    <Text style={styles.title}>{product.title}</Text>
+    <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+  </View>
+  <Text style={styles.category}>{product.category}</Text>
+</View>
       <Text style={styles.description}>{product.description}</Text>
       <Text style={styles.rating}>
         Rating: {product.rating.rate} ({product.rating.count} reviews)
@@ -41,21 +45,25 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'center',
+    textAlign: 'left',
     marginBottom: 8,
   },
   price: {
-    fontSize: 18,
-    color: '#2a9d8f',
+    alignContent: 'flex-start',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'left',
     marginBottom: 8,
   },
   category: {
+    width: '100%',
+    justifyContent:'flex-start',
+    textAlign: 'left',
     fontSize: 16,
     color: '#264653',
     marginBottom: 8,
-    fontStyle: 'italic',
   },
   description: {
     fontSize: 14,
@@ -67,6 +75,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#e76f51',
     marginBottom: 16,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 
