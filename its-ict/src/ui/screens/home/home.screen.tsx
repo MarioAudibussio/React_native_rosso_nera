@@ -18,6 +18,14 @@ enum FilterType {
   descendent = 'descendent',
 }
 
+enum Category {
+  All = 'All',
+  Men = "men's clothing",
+  Women = "women's clothing",
+  Jewelry = 'jewelery',
+  Electronics = 'electronics',
+}
+
 const HomeScreen = ({ navigation }: Props) => {
   const { 
     products, 
@@ -29,14 +37,15 @@ const HomeScreen = ({ navigation }: Props) => {
   
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [filterType, setFilterType] = useState<FilterType>(FilterType.initial);
+  const [selectedCategory, setSelectedCategory] = useState<Category>(Category.All);
 
   // Load favorites when component mounts
   useEffect(() => {
     const unload = navigation.addListener('focus', () => {
-    loadFavorites();
-  });
-  return unload;
-}, [navigation, loadFavorites]);
+      loadFavorites();
+    });
+    return unload;
+  }, [navigation, loadFavorites]);
 
   // Fetch products when screen is focused
   useEffect(() => {
@@ -48,29 +57,44 @@ const HomeScreen = ({ navigation }: Props) => {
 
   // Sync filteredProducts with products
   useEffect(() => {
-    setFilteredProducts(products); // Initialize with all products
-  }, [products]);
+    filterProducts(filterType, selectedCategory);
+  }, [products, filterType, selectedCategory]);
 
-  // Filter apply callback
+  // Filter products by price and category
+  const filterProducts = (type: FilterType, category: Category) => {
+    let filtered = products;
+
+    // Filter by category
+    if (category !== Category.All) {
+      filtered = filtered.filter((product) => product.category === category);
+    }
+
+    // Sort by price
+    if (type === FilterType.ascendent) {
+      filtered = filtered.sort((a, b) => a.price - b.price);
+    } else if (type === FilterType.descendent) {
+      filtered = filtered.sort((a, b) => b.price - a.price);
+    }
+
+    setFilteredProducts(filtered);
+  };
+
+  // Apply filter callback
   const onFilterApply = useCallback(
     (type: FilterType) => {
       setFilterType(type);
-
-      if (type === FilterType.initial) {
-        setFilteredProducts(products);
-        return;
-      }
-
-      const sortedProducts = [...products].sort((a, b) => {
-        if (type === FilterType.ascendent) {
-          return a.price - b.price;
-        }
-        return b.price - a.price;
-      });
-
-      setFilteredProducts(sortedProducts);
+      filterProducts(type, selectedCategory);
     },
-    [products]
+    [selectedCategory, products]
+  );
+
+  // Apply category filter callback
+  const onCategoryApply = useCallback(
+    (category: Category) => {
+      setSelectedCategory(category);
+      filterProducts(filterType, category);
+    },
+    [filterType, products]
   );
 
   // Render filter buttons
@@ -104,6 +128,26 @@ const HomeScreen = ({ navigation }: Props) => {
     );
   }, [filterType, onFilterApply]);
 
+  // Render category buttons
+  const renderCategoryButtons = useCallback(() => {
+    return (
+      <View style={styles.categoryContainer}>
+        {Object.values(Category).map((category) => (
+          <Button
+            key={category}
+            onPress={() => onCategoryApply(category as Category)}
+            disabled={selectedCategory === category}>
+            <Ionicons
+              name={selectedCategory === category ? 'checkbox' : 'square-outline'}
+              size={24}
+              color={selectedCategory === category ? 'green' : '#ffffff'}
+            />
+          </Button>
+        ))}
+      </View>
+    );
+  }, [selectedCategory, onCategoryApply]);
+
   // Render product item
   const renderItem = useCallback(
     ({ item }: { item: Product }) => (
@@ -124,10 +168,11 @@ const HomeScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       {renderFilterButtons()}
+      {renderCategoryButtons()}
 
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={filteredProducts} // Use filteredProducts instead of products
+        data={filteredProducts} 
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         ItemSeparatorComponent={ItemSeparatorComponent}

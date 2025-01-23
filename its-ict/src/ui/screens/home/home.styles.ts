@@ -47,11 +47,33 @@ export const styles = StyleSheet.create({
     color: '#666',
   },
   filtersContainer: {
-    flexDirection: 'row', // Disposizione orizzontale dei pulsanti
-    justifyContent: 'space-between', // Spazio tra i pulsanti
-    marginBottom: 16, // Spazio sotto i filtri
+    flexDirection: 'row',
+    justifyContent: 'space-between', 
+    marginBottom: 16, 
   },
   itemSeparator: {
-    height: 8, // Spaziatura verticale tra gli elementi
+    height: 8, 
+  },
+  categoryContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginVertical: 16,
+  },
+  categoryButton: {
+    margin: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: '#4CAF50', 
+  },
+  categoryButtonActive: {
+    backgroundColor: '#2E7D32', 
+  },
+  categoryButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
