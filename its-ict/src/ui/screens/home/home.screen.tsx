@@ -1,12 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, View, Text } from 'react-native';
+import { FlatList, ScrollView, View, Text } from 'react-native';
 import { styles } from './home.styles';
 import ProductCard from '../../atoms/product/product.atom';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MainParamList, Screen } from '../../navigation/types';
 import { Ionicons } from '@expo/vector-icons';
 import Button from '../../atoms/button/button.atom';
+import RoundButton from '../../atoms/button/roundbutton.atom';
+
 import { Product, useProducts } from '../../screens/hook/useProducts.facade';
+import { TouchableOpacity } from 'react-native';
 
 interface Props {
   navigation: NativeStackNavigationProp<MainParamList, Screen.Home>;
@@ -39,7 +42,6 @@ const HomeScreen = ({ navigation }: Props) => {
   const [filterType, setFilterType] = useState<FilterType>(FilterType.initial);
   const [selectedCategory, setSelectedCategory] = useState<Category>(Category.All);
 
-  // Load favorites when component mounts
   useEffect(() => {
     const unload = navigation.addListener('focus', () => {
       loadFavorites();
@@ -47,7 +49,6 @@ const HomeScreen = ({ navigation }: Props) => {
     return unload;
   }, [navigation, loadFavorites]);
 
-  // Fetch products when screen is focused
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       fetchProducts();
@@ -55,21 +56,17 @@ const HomeScreen = ({ navigation }: Props) => {
     return unsubscribe;
   }, [navigation, fetchProducts]);
 
-  // Sync filteredProducts with products
   useEffect(() => {
     filterProducts(filterType, selectedCategory);
   }, [products, filterType, selectedCategory]);
 
-  // Filter products by price and category
   const filterProducts = (type: FilterType, category: Category) => {
     let filtered = products;
 
-    // Filter by category
     if (category !== Category.All) {
       filtered = filtered.filter((product) => product.category === category);
     }
 
-    // Sort by price
     if (type === FilterType.ascendent) {
       filtered = filtered.sort((a, b) => a.price - b.price);
     } else if (type === FilterType.descendent) {
@@ -79,7 +76,6 @@ const HomeScreen = ({ navigation }: Props) => {
     setFilteredProducts(filtered);
   };
 
-  // Apply filter callback
   const onFilterApply = useCallback(
     (type: FilterType) => {
       setFilterType(type);
@@ -88,7 +84,6 @@ const HomeScreen = ({ navigation }: Props) => {
     [selectedCategory, products]
   );
 
-  // Apply category filter callback
   const onCategoryApply = useCallback(
     (category: Category) => {
       setSelectedCategory(category);
@@ -97,25 +92,25 @@ const HomeScreen = ({ navigation }: Props) => {
     [filterType, products]
   );
 
-  // Render filter buttons
   const renderFilterButtons = useCallback(() => {
     return (
       <View style={styles.filtersContainer}>
-        <Button onPress={() => onFilterApply(FilterType.descendent)}>
+        <RoundButton onPress={() => onFilterApply(FilterType.descendent)}>
           <Ionicons
             name={'arrow-down'}
             size={24}
             color={filterType === FilterType.descendent ? '#7666F1' : '#C7CACD'}
           />
-        </Button>
-        <Button onPress={() => onFilterApply(FilterType.ascendent)}>
+        </RoundButton>
+        <RoundButton onPress={() => onFilterApply(FilterType.ascendent)}
+        >
           <Ionicons
             name={'arrow-up'}
             size={24}
             color={filterType === FilterType.ascendent ? '#7666F1' : '#C7CACD'}
           />
-        </Button>
-        <Button
+        </RoundButton>
+        <RoundButton
           onPress={() => onFilterApply(FilterType.initial)}
           disabled={filterType === FilterType.initial}>
           <Ionicons
@@ -123,15 +118,18 @@ const HomeScreen = ({ navigation }: Props) => {
             size={24}
             color={filterType !== FilterType.initial ? '#7666F1' : '#C7CACD'}
           />
-        </Button>
+        </RoundButton>
       </View>
     );
   }, [filterType, onFilterApply]);
 
-  // Render category buttons
   const renderCategoryButtons = useCallback(() => {
     return (
-      <View style={styles.categoryContainer}>
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false} 
+        contentContainerStyle={styles.categoryScrollContainer}
+      >
         {Object.values(Category).map((category) => (
           <Button
             key={category}
@@ -141,15 +139,15 @@ const HomeScreen = ({ navigation }: Props) => {
               padding: 10,
               marginHorizontal: 5,
               borderRadius: 5,
-            }}>
+            }}
+          >
             <Text style={{ color: '#fff' }}>{category}</Text>
           </Button>
         ))}
-      </View>
+      </ScrollView>
     );
   }, [selectedCategory, onCategoryApply]);
 
-  // Render product item
   const renderItem = useCallback(
     ({ item }: { item: Product }) => (
       <ProductCard
@@ -168,10 +166,13 @@ const HomeScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topContainer}>
-      {renderFilterButtons()}
-      {renderCategoryButtons()}</View>
-      <View style={styles.container}>
+    {/* Top Section with Category Buttons */}
+    <View style={styles.topContainer}>
+      {renderCategoryButtons()}
+    </View>
+
+    {/* FlatList Section */}
+    <View style={styles.listContainer}>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={filteredProducts} 
@@ -179,8 +180,13 @@ const HomeScreen = ({ navigation }: Props) => {
         keyExtractor={(item) => item.id.toString()}
         ItemSeparatorComponent={ItemSeparatorComponent}
       />
-          </View>
     </View>
+
+    {/* Floating Action Button */}
+    <TouchableOpacity style={styles.lowupFilter}>
+    {renderFilterButtons()}
+    </TouchableOpacity>
+  </View>
   );
 };
 

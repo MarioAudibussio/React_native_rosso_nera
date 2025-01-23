@@ -2,41 +2,61 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-    padding: 10,
+    flexGrow: 1,
+    backgroundColor: '#fff',
+    padding: 16,
+    alignItems: 'center',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 16,
+    left: 16,
+    zIndex: 1,
   },
   image: {
-    width: '100%',
-    height: 300,
+    width: 200,
+    height: 200,
     resizeMode: 'contain',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   title: {
-    fontSize: 24,
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#333',
+    textAlign: 'left',
+    marginBottom: 8,
   },
   price: {
-    fontSize: 18,
-    color: '#888',
-    marginBottom: 10,
+    alignContent: 'flex-start',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'left',
+    marginBottom: 8,
+    color: '#7666F1'
   },
   category: {
+    width: '100%',
+    justifyContent: 'flex-start',
+    textAlign: 'left',
     fontSize: 16,
-    fontStyle: 'italic',
-    color: '#666',
-    marginBottom: 10,
+    color: '#264653',
+    marginBottom: 0, // Rimosso spazio extra
+  },
+  description: {
+    fontSize: 12,
+    color: '#000',
+    textAlign: 'center',
+    marginBottom: 44,
+    marginTop: 44, // Aggiunto margine superiore per una leggera separazione
   },
   rating: {
     fontSize: 16,
-    color: '#666',
-    marginBottom: 20,
+    color: '#7666F1',
+    marginBottom: 16,
   },
-  description: {
-    fontSize: 16,
-    lineHeight: 22,
-    color: '#444',
+  row: {
+    width:'100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

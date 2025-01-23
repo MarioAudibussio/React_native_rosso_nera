@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { TouchableOpacity, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
-const Button = ({
+const RoundButton = ({
   children,
   disabled,
   onPress,
@@ -17,21 +17,23 @@ const Button = ({
   return (
     <TouchableOpacity
       disabled={disabled}
-      style={[styles.button, style]}
+      style={[styles.roundbutton, style]}
       onPress={onPress}
     >
-      {title ? <Text style={styles.buttonText}>{title}</Text> : children}
+      {title ? <Text style={styles.roundbuttonText}>{title}</Text> : children}
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    height: '100%',
-    backgroundColor: '#112341',
+  roundbutton: {
+    marginRight:8,
+    height: 50,
+    width:50,
+    backgroundColor: '#fff',
     paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
+    paddingHorizontal: 12,
+    borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 2,
@@ -39,12 +41,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
+    borderColor: '#C7CACD',
+    borderWidth: 1
   },
-  buttonText: {
+  roundbuttonText: {
     color: 'red',
     fontSize: 16,
     fontWeight: 'bold',
   },
 });
 
-export default Button;
+export default RoundButton;

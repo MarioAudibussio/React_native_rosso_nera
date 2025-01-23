@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, FlatList, Text } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MainParamList, Screen } from '../../navigation/types';
 import ProductCard from '../../atoms/product/product.atom';
 import { Product, useProducts } from '../../screens/hook/useProducts.facade';
+import { styles } from './favorites.styles';
 
 interface Props {
   navigation: NativeStackNavigationProp<MainParamList, Screen.Favorites>;
@@ -27,6 +28,7 @@ const FavoritesScreen: React.FC<Props> = ({ navigation }) => {
     const favorites = products.filter((product) => favoriteIds.includes(product.id));
     setFavoriteProducts(favorites);
   }, [products, favoriteIds]);
+  const ItemSeparatorComponent = useCallback(() => <View style={styles.itemSeparator}></View>, []);
 
   // Render di un singolo prodotto
   const renderItem = ({ item }: { item: Product }) => (
@@ -56,6 +58,7 @@ const FavoritesScreen: React.FC<Props> = ({ navigation }) => {
         data={favoriteProducts}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
+        ItemSeparatorComponent={ItemSeparatorComponent}
       />
     </View>
   );

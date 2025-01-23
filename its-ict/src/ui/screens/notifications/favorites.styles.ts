@@ -11,6 +11,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemSeparator: {
-    height: 20,
+    height: 18,
   },
 });
