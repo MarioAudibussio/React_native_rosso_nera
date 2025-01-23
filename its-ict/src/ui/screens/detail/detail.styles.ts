@@ -39,14 +39,14 @@ export const styles = StyleSheet.create({
     textAlign: 'left',
     fontSize: 16,
     color: '#264653',
-    marginBottom: 0, // Rimosso spazio extra
+    marginBottom: 0, 
   },
   description: {
     fontSize: 12,
     color: '#000',
     textAlign: 'center',
     marginBottom: 44,
-    marginTop: 44, // Aggiunto margine superiore per una leggera separazione
+    marginTop: 44,
   },
   rating: {
     fontSize: 16,

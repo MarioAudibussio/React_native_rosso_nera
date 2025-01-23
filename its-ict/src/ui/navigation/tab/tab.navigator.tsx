@@ -47,8 +47,8 @@ export default function TabNavigator() {
           },
         };
       }}>
-      <Tab.Screen name={Screen.Home} component={HomeScreen}initialParams={{ hasFavoritesUpdated: false }}/>
-      <Tab.Screen name={Screen.Favorites} component={FavoritesScreen}initialParams={{ hasFavoritesUpdated: false }}/>
+      <Tab.Screen name={Screen.Home} component={HomeScreen}/>
+      <Tab.Screen name={Screen.Favorites} component={FavoritesScreen}/>
     </Tab.Navigator>
   );
 }

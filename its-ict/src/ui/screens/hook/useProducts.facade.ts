@@ -22,14 +22,12 @@ export const useProducts = () => {
   const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
 
 
-// In useProducts hook
   const fetchProducts = async () => {
     try {
       const response = await fetch('https://fakestoreapi.com/products');
       const json = await response.json();
       setProducts(json);
       
-      // Also load favorites immediately after fetching products
     } catch (error) {
       console.error('Error fetching products:', error);
     }
@@ -39,9 +37,9 @@ export const useProducts = () => {
   const loadFavorites = useCallback(async () => {
     try {
       const storedFavorites = await storage.getItem(PREFERRED_PRODUCTS);
-      console.log('Stored Favorites:', storedFavorites); // Add this log
+      console.log('Stored Favorites:', storedFavorites); 
       const parsedFavorites = storedFavorites ? JSON.parse(storedFavorites) : [];
-      console.log('Parsed Favorites:', parsedFavorites); // And this
+      console.log('Parsed Favorites:', parsedFavorites); 
       setFavoriteIds(parsedFavorites);
     } catch (error) {
       console.error('Error loading favorites:', error);
@@ -55,7 +53,7 @@ export const useProducts = () => {
           ? favoriteIds.filter((id) => id !== item.id)
           : [...favoriteIds, item.id];
         
-        console.log('Updated Favorites:', updatedFavorites); // Log updated favorites
+        console.log('Updated Favorites:', updatedFavorites); 
         
         setFavoriteIds(updatedFavorites);
         await storage.setItem(PREFERRED_PRODUCTS, JSON.stringify(updatedFavorites));

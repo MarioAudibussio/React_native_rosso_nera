@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
 import { TouchableOpacity, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { styles } from './button.styles';
 
 const Button = ({
   children,
@@ -24,27 +25,5 @@ const Button = ({
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  button: {
-    height: '100%',
-    backgroundColor: '#112341',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-  },
-  buttonText: {
-    color: 'red',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
 
 export default Button;

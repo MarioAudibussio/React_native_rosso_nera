@@ -166,12 +166,10 @@ const HomeScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-    {/* Top Section with Category Buttons */}
     <View style={styles.topContainer}>
       {renderCategoryButtons()}
     </View>
 
-    {/* FlatList Section */}
     <View style={styles.listContainer}>
       <FlatList
         showsVerticalScrollIndicator={false}
@@ -182,7 +180,6 @@ const HomeScreen = ({ navigation }: Props) => {
       />
     </View>
 
-    {/* Floating Action Button */}
     <TouchableOpacity style={styles.lowupFilter}>
     {renderFilterButtons()}
     </TouchableOpacity>
