@@ -1,19 +1,25 @@
 import React, { ReactElement } from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
 const Button = ({
   children,
   disabled,
   onPress,
   title,
+  style,
 }: {
   children: ReactElement;
   disabled?: boolean;
   onPress: () => void;
   title?: string;
+  style?: StyleProp<ViewStyle>;
 }) => {
   return (
-    <TouchableOpacity disabled={disabled} style={styles.button} onPress={onPress}>
+    <TouchableOpacity
+      disabled={disabled}
+      style={[styles.button, style]} // Combina lo stile di default con lo stile personalizzato
+      onPress={onPress}
+    >
       {title ? <Text style={styles.buttonText}>{title}</Text> : children}
     </TouchableOpacity>
   );

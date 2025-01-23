@@ -26,13 +26,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <Text style={styles.price}>${product.price.toFixed(2)}</Text>
       </View>
       <TouchableOpacity onPress={(e) => {
-        e.stopPropagation(); // Prevent onPress from triggering when like is clicked
+        e.stopPropagation(); 
         onLike();
       }}>
         <Icon
           name={isLiked ? 'favorite' : 'favorite-border'}
           size={24}
-          color={isLiked ? 'red' : 'gray'}
+          color={isLiked ? '#7666F1' : '#C7CACD'}
           style={styles.icon}
         />
       </TouchableOpacity>

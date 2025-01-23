@@ -105,14 +105,14 @@ const HomeScreen = ({ navigation }: Props) => {
           <Ionicons
             name={'arrow-down'}
             size={24}
-            color={filterType === FilterType.descendent ? 'green' : '#ffffff'}
+            color={filterType === FilterType.descendent ? '#7666F1' : '#C7CACD'}
           />
         </Button>
         <Button onPress={() => onFilterApply(FilterType.ascendent)}>
           <Ionicons
             name={'arrow-up'}
             size={24}
-            color={filterType === FilterType.ascendent ? 'green' : '#ffffff'}
+            color={filterType === FilterType.ascendent ? '#7666F1' : '#C7CACD'}
           />
         </Button>
         <Button
@@ -121,7 +121,7 @@ const HomeScreen = ({ navigation }: Props) => {
           <Ionicons
             name={'refresh'}
             size={24}
-            color={filterType !== FilterType.initial ? '#fff' : 'gray'}
+            color={filterType !== FilterType.initial ? '#7666F1' : '#C7CACD'}
           />
         </Button>
       </View>
@@ -137,7 +137,7 @@ const HomeScreen = ({ navigation }: Props) => {
             key={category}
             onPress={() => onCategoryApply(category as Category)}
             style={{
-              backgroundColor: selectedCategory === category ? 'green' : 'gray',
+              backgroundColor: selectedCategory === category ? '#7666F1' : '#C7CACD',
               padding: 10,
               marginHorizontal: 5,
               borderRadius: 5,
@@ -168,9 +168,10 @@ const HomeScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.topContainer}>
       {renderFilterButtons()}
-      {renderCategoryButtons()}
-
+      {renderCategoryButtons()}</View>
+      <View style={styles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={filteredProducts} 
@@ -178,6 +179,7 @@ const HomeScreen = ({ navigation }: Props) => {
         keyExtractor={(item) => item.id.toString()}
         ItemSeparatorComponent={ItemSeparatorComponent}
       />
+          </View>
     </View>
   );
 };
