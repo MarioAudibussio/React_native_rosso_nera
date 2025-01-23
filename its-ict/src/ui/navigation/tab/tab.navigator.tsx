@@ -15,13 +15,13 @@ export default function TabNavigator() {
           headerShown: true,
           tabBarShowLabel: false,
           tabBarStyle: {
-            backgroundColor: '#1a1a1a',
+            backgroundColor: '#001945',
             borderTopColor: '#333333',
           },
           headerStyle: {
-            backgroundColor: '#1a1a1a',
+            backgroundColor: '#001945',
           },
-          headerTintColor: '#ffffff',
+          headerTintColor: '#001945',
           tabBarIconStyle: {
             flex: 1,
             justifyContent: 'center',
@@ -41,7 +41,7 @@ export default function TabNavigator() {
               <Ionicons 
                 name={iconName()} 
                 size={24} 
-                color={focused ? '#3579f6' : '#888888'}
+                color={focused ? '#f5f5f5' : '#006BFA'}
               />
             );
           },

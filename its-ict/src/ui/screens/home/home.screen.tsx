@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, View, Text } from 'react-native';
 import { styles } from './home.styles';
 import ProductCard from '../../atoms/product/product.atom';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -136,12 +136,13 @@ const HomeScreen = ({ navigation }: Props) => {
           <Button
             key={category}
             onPress={() => onCategoryApply(category as Category)}
-            disabled={selectedCategory === category}>
-            <Ionicons
-              name={selectedCategory === category ? 'checkbox' : 'square-outline'}
-              size={24}
-              color={selectedCategory === category ? 'green' : '#ffffff'}
-            />
+            style={{
+              backgroundColor: selectedCategory === category ? 'green' : 'gray',
+              padding: 10,
+              marginHorizontal: 5,
+              borderRadius: 5,
+            }}>
+            <Text style={{ color: '#fff' }}>{category}</Text>
           </Button>
         ))}
       </View>

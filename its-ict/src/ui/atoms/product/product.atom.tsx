@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Product } from '../../screens/hook/useProducts.facade';
+import { styles } from './product.styles';
+
 
 interface ProductCardProps {
   product: Product;
@@ -38,34 +40,5 @@ const ProductCard: React.FC<ProductCardProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: 'white',
-    borderRadius: 10,
-  },
-  image: {
-    width: 80,
-    height: 80,
-    marginRight: 10,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  price: {
-    fontSize: 14,
-    color: 'gray',
-  },
-  icon: {
-    marginLeft: 10,
-  },
-});
 
 export default ProductCard;
