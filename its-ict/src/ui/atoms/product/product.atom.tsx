@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Usa react-native-vector-icons
-import { Product } from '../../screens/hook/useCarts.facade';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Product } from '../../screens/hook/useProducts.facade';
 
 interface ProductCardProps {
   product: Product;
   onPress: () => void;
-  onLike: () => void; // Nuova funzione per gestire "Mi piace"
-  isLiked: boolean;  // Stato per il "Mi piace"
+  onLike: () => void;
+  isLiked: boolean;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onPress, onLike, isLiked }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ 
+  product, 
+  onPress, 
+  onLike, 
+  isLiked 
+}) => {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <Image source={{ uri: product.image }} style={styles.image} />
@@ -18,7 +23,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onPress, onLike, isL
         <Text style={styles.title}>{product.title}</Text>
         <Text style={styles.price}>${product.price.toFixed(2)}</Text>
       </View>
-      <TouchableOpacity onPress={onLike}>
+      <TouchableOpacity onPress={(e) => {
+        e.stopPropagation(); // Prevent onPress from triggering when like is clicked
+        onLike();
+      }}>
         <Icon
           name={isLiked ? 'favorite' : 'favorite-border'}
           size={24}
@@ -33,25 +41,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onPress, onLike, isL
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    marginBottom: 10,
-    borderRadius: 8,
-    padding: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
     alignItems: 'center',
+    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 10,
   },
   image: {
     width: 80,
     height: 80,
-    resizeMode: 'contain',
     marginRight: 10,
   },
   content: {
     flex: 1,
+    justifyContent: 'center',
   },
   title: {
     fontSize: 16,
@@ -59,7 +61,7 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 14,
-    color: '#888',
+    color: 'gray',
   },
   icon: {
     marginLeft: 10,

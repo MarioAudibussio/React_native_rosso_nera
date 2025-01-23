@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
-import { styles } from './home.styles'; // Assicura che lo stile esista
-import ProductCard from '../../atoms/product/product.atom'; // Adatta il componente Card per prodotti
+import { styles } from './home.styles';
+import ProductCard from '../../atoms/product/product.atom';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { MainParamList, Screen } from '../../navigation/types'; // Mantieni la tua navigazione
+import { MainParamList, Screen } from '../../navigation/types';
 import { Ionicons } from '@expo/vector-icons';
 import Button from '../../atoms/button/button.atom';
+import { Product, useProducts } from '../../screens/hook/useProducts.facade';
 
 interface Props {
   navigation: NativeStackNavigationProp<MainParamList, Screen.Home>;
@@ -17,59 +18,62 @@ enum FilterType {
   descendent = 'descendent',
 }
 
-// Tipo per i prodotti
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  category: string;
-  image: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
-}
-
 const HomeScreen = ({ navigation }: Props) => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const { 
+    products, 
+    favoriteIds, 
+    fetchProducts,
+    loadFavorites, 
+    addFavorite 
+  } = useProducts();
+  
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [filterType, setFilterType] = useState<FilterType>(FilterType.initial);
 
-  // ** FETCH PRODUCTS ** //
+  // Load favorites when component mounts
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products')
-      .then((res) => res.json())
-      .then((json) => {
-        setProducts(json);
-        setFilteredProducts(json); // Imposta i prodotti iniziali
-      })
-      .catch((error) => console.error('Errore durante il fetch dei prodotti:', error));
-  }, []);
+    const unload = navigation.addListener('focus', () => {
+    loadFavorites();
+  });
+  return unload;
+}, [navigation, loadFavorites]);
 
-  // ** USE CALLBACK ** //
+  // Fetch products when screen is focused
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchProducts();
+    });
+    return unsubscribe;
+  }, [navigation, fetchProducts]);
+
+  // Sync filteredProducts with products
+  useEffect(() => {
+    setFilteredProducts(products); // Initialize with all products
+  }, [products]);
+
+  // Filter apply callback
   const onFilterApply = useCallback(
     (type: FilterType) => {
       setFilterType(type);
 
       if (type === FilterType.initial) {
-        // Resetta ai prodotti originali
         setFilteredProducts(products);
         return;
       }
 
-      const sortedProducts = [...filteredProducts].sort((a, b) => {
+      const sortedProducts = [...products].sort((a, b) => {
         if (type === FilterType.ascendent) {
-          return a.price - b.price; // Ordina per prezzo crescente
+          return a.price - b.price;
         }
-        return b.price - a.price; // Ordina per prezzo decrescente
+        return b.price - a.price;
       });
 
       setFilteredProducts(sortedProducts);
     },
-    [filteredProducts, products]
+    [products]
   );
 
+  // Render filter buttons
   const renderFilterButtons = useCallback(() => {
     return (
       <View style={styles.filtersContainer}>
@@ -100,16 +104,19 @@ const HomeScreen = ({ navigation }: Props) => {
     );
   }, [filterType, onFilterApply]);
 
+  // Render product item
   const renderItem = useCallback(
     ({ item }: { item: Product }) => (
       <ProductCard
         product={item}
         onPress={() => {
-          navigation.navigate(Screen.Detail, { product: item }); 
+          navigation.navigate(Screen.Detail, { product: item });
         }}
+        onLike={() => addFavorite(item)}
+        isLiked={favoriteIds.includes(item.id)}
       />
     ),
-    [navigation]
+    [navigation, favoriteIds, addFavorite]
   );
 
   const ItemSeparatorComponent = useCallback(() => <View style={styles.itemSeparator}></View>, []);
@@ -120,7 +127,7 @@ const HomeScreen = ({ navigation }: Props) => {
 
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={filteredProducts}
+        data={filteredProducts} // Use filteredProducts instead of products
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         ItemSeparatorComponent={ItemSeparatorComponent}

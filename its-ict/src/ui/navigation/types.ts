@@ -1,3 +1,5 @@
+import { Product } from "../screens/hook/useProducts.facade";
+
 export enum Screen {
   TabNavigator = 'TabNavigator',
   Home = 'Home',
@@ -16,7 +18,9 @@ export type TabParams = {
 
 export type MainParamList = {
   TabNavigator: undefined;
+  [Screen.Home]: undefined; 
   [Screen.Detail]: {
-    id: number;
+    product: Product; 
   };
+  [Screen.Favorites]: undefined;
 };

@@ -1,46 +1,64 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
-import ProductCard from '../../atoms/product/product.atom'; // Importa la card
-import { Product } from '../../screens/hook/useCarts.facade';
+import React, { useEffect, useState } from 'react';
+import { View, FlatList, Text } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { MainParamList, Screen } from '../../navigation/types';
+import ProductCard from '../../atoms/product/product.atom';
+import { Product, useProducts } from '../../screens/hook/useProducts.facade';
 
-const Favorite: React.FC = () => {
-  const [favorites, setFavorites] = useState<Product[]>([]);
+interface Props {
+  navigation: NativeStackNavigationProp<MainParamList, Screen.Favorites>;
+}
 
-  const handleLike = (product: Product) => {
-    const isAlreadyLiked = favorites.some(fav => fav.id === product.id);
-    if (isAlreadyLiked) {
-      setFavorites(favorites.filter(fav => fav.id !== product.id));
-    } else {
-      setFavorites([...favorites, product]);
-    }
-  };
+const FavoritesScreen: React.FC<Props> = ({ navigation }) => {
+  const { products, favoriteIds, addFavorite, loadFavorites, fetchProducts } = useProducts();
+  const [favoriteProducts, setFavoriteProducts] = useState<Product[]>([]);
 
+  // Carica preferiti e prodotti quando la schermata viene mostrata
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadFavorites();
+      fetchProducts();
+    });
+    return unsubscribe;
+  }, [navigation, loadFavorites, fetchProducts]);
+
+  // Aggiorna i prodotti preferiti quando `products` o `favoriteIds` cambiano
+  useEffect(() => {
+    const favorites = products.filter((product) => favoriteIds.includes(product.id));
+    setFavoriteProducts(favorites);
+  }, [products, favoriteIds]);
+
+  // Render di un singolo prodotto
   const renderItem = ({ item }: { item: Product }) => (
     <ProductCard
       product={item}
-      onPress={() => console.log('Navigate to details')}
-      onLike={() => handleLike(item)}
-      isLiked={favorites.some(fav => fav.id === item.id)}
+      onPress={() => {
+        navigation.navigate(Screen.Detail, { product: item });
+      }}
+        onLike={() => addFavorite(item)}
+      isLiked={true}
     />
   );
 
+  // Messaggio per lista vuota
+  if (favoriteProducts.length === 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>No favorite products yet</Text>
+      </View>
+    );
+  }
+
+  // Render principale
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1, padding: 10 }}>
       <FlatList
-        data={favorites}
-        keyExtractor={item => item.id.toString()}
+        data={favoriteProducts}
         renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9f9f9',
-    padding: 10,
-  },
-});
-
-export default Favorite;
+export default FavoritesScreen;

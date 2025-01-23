@@ -15,7 +15,6 @@ export const GenericCard = ({ title, subTitle, backgroundColor, image, onPress }
 
   return (
     <TouchableOpacity
-      disabled={!onPress}
       style={[
         styles.container,
         { backgroundColor: backgroundColor ?? '#fff' }, // Default white background if not provided
