@@ -68,9 +68,9 @@ const HomeScreen = ({ navigation }: Props) => {
     }
 
     if (type === FilterType.ascendent) {
-      filtered = filtered.sort((a, b) => a.price - b.price);
+      filtered = filtered.sort((a, b) => a.rating.rate - b.rating.rate);
     } else if (type === FilterType.descendent) {
-      filtered = filtered.sort((a, b) => b.price - a.price);
+      filtered = filtered.sort((a, b) => b.rating.rate - a.rating.rate);
     }
 
     setFilteredProducts(filtered);
