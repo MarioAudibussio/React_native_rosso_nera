@@ -16,9 +16,10 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   topContainer: {
+    height:'8%',
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between', // Aggiunto per distribuire i bottoni
+    justifyContent: 'space-between', 
     marginBottom: 16,
   },
   listContainer: {
