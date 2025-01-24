@@ -23,7 +23,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <Image source={{ uri: product.image }} style={styles.image} />
       <View style={styles.content}>
         <Text style={styles.title}>{product.title}</Text>
+        <Text style={styles.description} numberOfLines={2}>{product.description}</Text>
+        <View style={styles.row}>
         <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+        <Text style={styles.rate}>Valutazione media: {product.rating.rate}</Text>
+</View>
       </View>
       <TouchableOpacity onPress={(e) => {
         e.stopPropagation(); 
